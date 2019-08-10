@@ -41,7 +41,7 @@ resources:
     storage_account_name: ((storage_account_name))
     storage_account_key: ((storage_account_key))
     container: ((container))
-    versioned_file: installation.zip
+    versioned_file: state.yml
 
 #- name: configuration
 #  type: git
@@ -115,7 +115,7 @@ jobs:
 
   - task: download-create-opsman
     image: platform-automation-image
-    file: director-configuration/proposed-tasks/download-create-opsman.yml
+    file: platform-automation-tasks/tasks/create-vm.yml
     input_mapping:
       download-config: director-configuration
       state: state
@@ -132,27 +132,10 @@ jobs:
         vars/environments/azure/sandbox/config-director/vars/opsman.yml
         secrets/environments/azure/sandbox/config-director/secrets/opsman.yml
         secrets/environments/azure/sandbox/config-director/secrets/pivnet.yml
+  - put: state
+    params:
+      file: generated-state/state.yml
 
-    ensure: &make-state-commit
-      do:
-        - task: make-commit
-          image: platform-automation-image
-          file: director-configuration/proposed-tasks/make-commit.yml
-          input_mapping:
-            repository: state
-            file-source: generated-state
-          output_mapping:
-            repository-commit: state-commit
-          params:
-            FILE_SOURCE_PATH: state.yml
-            FILE_DESTINATION_PATH: environments/((iaas))/((foundation))/state/state.yml
-            GIT_AUTHOR_EMAIL: "pipeline_robot@pivotal.io"
-            GIT_AUTHOR_NAME: "Platform Automation"
-            COMMIT_MESSAGE: 'Update state file'
-        - put: state
-          params:
-            repository: state-commit
-            merge: true
 
   - task: configure-authentication
     image: platform-automation-image
@@ -207,7 +190,7 @@ jobs:
 
   - task: credhub-interpolate
     image: platform-automation-image
-    file: director-configuration/proposed-tasks/credhub-interpolate.yml
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
     params: *director_credhub_interpolate_params
     input_mapping:
       files: director-configuration
@@ -243,14 +226,14 @@ jobs:
 
   - task: credhub-interpolate
     image: platform-automation-image
-    file: director-configuration/proposed-tasks/credhub-interpolate.yml
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
     params: *director_credhub_interpolate_params
     input_mapping:
       files: director-configuration
 
   - task: download-upgrade-opsman
     image: platform-automation-image
-    file: director-configuration/proposed-tasks/download-upgrade-opsman.yml
+    file: platform-automation-tasks/tasks/upgrade-opsman.yml
     input_mapping:
       download-config: director-configuration
       state: state
@@ -270,7 +253,9 @@ jobs:
         secrets/environments/((iaas))/((foundation))/config-director/secrets/opsman.yml
         secrets/environments/((iaas))/((foundation))/config-director/secrets/pivnet.yml
       ENV_FILE: environments/((iaas))/((foundation))/config-director/secrets/env.yml
-    ensure: *make-state-commit
+  - put: state
+    params:
+      file: generated-state/state.yml
 
   - task: apply-director-changes
     image: platform-automation-image
