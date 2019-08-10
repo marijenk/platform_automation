@@ -1,3 +1,4 @@
 iaas: azure
 foundation: sandbox
 team: main
+pcf_automation_version: ^3\.0\..*$
