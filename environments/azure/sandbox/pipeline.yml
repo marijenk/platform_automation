@@ -127,11 +127,11 @@ jobs:
       STATE_FILE: environments/((iaas))/((foundation))/state/state.yml
       OPSMAN_CONFIG_FILE: environments/((iaas))/((foundation))/config-director/templates/opsman.yml
       VARS_FILES: |
-        vars/environments/((iaas))/common-director/opsman.yml
-        vars/environments/((iaas))/((foundation))/config-director/vars/infra.yml
-        vars/environments/((iaas))/((foundation))/config-director/vars/opsman.yml
-        secrets/environments/((iaas))/((foundation))/config-director/secrets/opsman.yml
-        secrets/environments/((iaas))/((foundation))/config-director/secrets/pivnet.yml
+        vars/environments/azure/common-director/opsman.yml
+        vars/environments/azure/sandbox/config-director/vars/infra.yml
+        vars/environments/azure/sandbox/config-director/vars/opsman.yml
+        secrets/environments/azure/sandbox/config-director/secrets/opsman.yml
+        secrets/environments/azure/sandbox/config-director/secrets/pivnet.yml
 
     ensure: &make-state-commit
       do:
