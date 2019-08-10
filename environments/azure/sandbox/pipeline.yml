@@ -55,7 +55,7 @@ resources:
 - name: lock
   type: pool
   source:
-    uri: ((locks_repo))
+    uri: git@github.com:marijenk/platform_automation.git
     branch: master
     private_key: ((git_private_key.private_key))
     pool: ((foundation))
@@ -101,7 +101,7 @@ jobs:
       CREDHUB_CA_CERT: ((concourse_credhub_ca))
       CREDHUB_CLIENT: concourse_to_credhub_client
       CREDHUB_SECRET: ((concourse_credhub_client_secret))
-      PREFIX: '/concourse/((foundation))'
+      PREFIX: '/concourse/((team))'
       INTERPOLATION_PATHS: "environments/((iaas))/((foundation))/config-director/secrets"
     input_mapping:
       files: director-configuration
@@ -344,63 +344,10 @@ jobs:
       CREDHUB_CA_CERT: ((concourse_credhub_ca))
       CREDHUB_CLIENT: concourse_to_credhub
       CREDHUB_SECRET: ((concourse_credhub_client_secret))
-      PREFIX: '/concourse/((foundation))'
+      PREFIX: '/concourse/((team))'
       INTERPOLATION_PATHS: "environments/((iaas))/((foundation))/config/secrets"
     input_mapping:
       files: configuration
-
-
-- name: clamav
-  plan:
-  - aggregate:
-    - get: configuration
-      trigger: true
-      passed: [ validate-tile-configuration ]
-    - get: platform-automation-image
-      resource: platform-automation
-      params:
-        unpack: true
-        globs: ["*image*"]
-    - get: platform-automation-tasks
-      resource: platform-automation
-      params:
-        unpack: true
-        globs: ["*tasks*"]
-
-  - task: credhub-interpolate
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params: *credhub_interpolate_params
-    input_mapping:
-      files: configuration
-
-  - task: download
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/download-product.yml
-    input_mapping:
-      config: configuration
-      vars: configuration
-      secrets: interpolated-files
-    params:
-      CONFIG_FILE: environments/((iaas))/((foundation))/config/versions/clamav.yml
-      VARS_FILES: |
-        secrets/environments/((iaas))/((foundation))/config/secrets/pivnet.yml
-  - task: apply-runtime-config
-    image: platform-automation-image
-    file: configuration/proposed-tasks/apply-runtime-config.yml
-    input_mapping:
-      config: configuration
-      vars: configuration
-      secrets: interpolated-files
-      env: interpolated-files
-      files: downloaded-product
-    params:
-      NAME: clamav
-      CONFIG_FILE: environments/((iaas))/((foundation))/config/templates/clamav.yml
-      VARS_FILES: |
-        vars/environments/((iaas))/common/clamav.yml
-        vars/environments/((iaas))/((foundation))/config/versions/clamav.yml
-      ENV_FILE: environments/((iaas))/((foundation))/config/secrets/env.yml
 
 - name: pas
   serial: true
@@ -590,125 +537,6 @@ jobs:
       ERRAND_NAME: deploy-notifications-ui
       ENV_FILE: environments/((iaas))/((foundation))/config/secrets/env.yml
       INSTANCE: clock_global/first
-
-- name: p-healthwatch
-  serial: true
-  plan:
-  - aggregate:
-    - get: configuration
-      trigger: true
-      passed: [ pas ]
-    - get: platform-automation-image
-      resource: platform-automation
-      params:
-        unpack: true
-        globs: ["*image*"]
-    - get: platform-automation-tasks
-      resource: platform-automation
-      params:
-        unpack: true
-        globs: ["*tasks*"]
-
-  - task: credhub-interpolate
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params: *credhub_interpolate_params
-    input_mapping:
-      files: configuration
-
-  - task: download-stage-tile-stemcell
-    image: platform-automation-image
-    file: configuration/proposed-tasks/download-stage-tile-stemcell.yml
-    input_mapping:
-      config: configuration
-      download-config: configuration
-      env: interpolated-files
-      secrets: interpolated-files
-    params:
-      DOWNLOAD_CONFIG_FILE: environments/((iaas))/((foundation))/config/versions/p-healthwatch.yml
-      DOWNLOAD_STEMCELL_CONFIG_FILE: environments/((iaas))/((foundation))/config/versions/p-healthwatch-stemcell.yml
-      CONFIG_FILE: environments/((iaas))/((foundation))/config/templates/p-healthwatch.yml
-      ENV_FILE: environments/((iaas))/((foundation))/config/secrets/env.yml
-      VARS_FILES: secrets/environments/((iaas))/((foundation))/config/secrets/pivnet.yml
-
-  - task: configure
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/configure-product.yml
-    input_mapping:
-      config: configuration
-      env: interpolated-files
-      vars: configuration
-      secrets: interpolated-files
-    params:
-      CONFIG_FILE: environments/((iaas))/((foundation))/config/templates/p-healthwatch.yml
-      VARS_FILES: |
-        vars/environments/((iaas))/((foundation))/config/defaults/p-healthwatch.yml
-        vars/environments/((iaas))/common/p-healthwatch.yml
-        vars/environments/((iaas))/((foundation))/config/vars/p-healthwatch.yml
-        secrets/environments/((iaas))/((foundation))/config/secrets/p-healthwatch.yml
-      ENV_FILE: environments/((iaas))/((foundation))/config/secrets/env.yml
-
-  - task: apply-product-changes
-    image: platform-automation-image
-    file: configuration/proposed-tasks/apply-product-changes.yml
-    attempts: 10
-    input_mapping:
-      config: configuration
-      env: interpolated-files
-    params:
-      CONFIG_FILE: environments/((iaas))/((foundation))/config/templates/p-healthwatch.yml
-      ENV_FILE: environments/((iaas))/((foundation))/config/secrets/env.yml
-
-- name: p-healthwatch-errands
-  plan:
-  - aggregate:
-    - get: configuration
-      trigger: true
-      passed: [ p-healthwatch ]
-    - get: platform-automation-image
-      resource: platform-automation
-      params:
-        unpack: true
-        globs: ["*image*"]
-    - get: platform-automation-tasks
-      resource: platform-automation
-      params:
-        unpack: true
-        globs: ["*tasks*"]
-
-  - task: credhub-interpolate
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params: *credhub_interpolate_params
-    input_mapping:
-      files: configuration
-  - task: push-apps
-    attempts: 5
-    image: platform-automation-image
-    file: configuration/proposed-tasks/run-errand.yml
-    input_mapping:
-      config: configuration
-      env: interpolated-files
-    params:
-      CONFIG_FILE: environments/((iaas))/((foundation))/config/templates/p-healthwatch.yml
-      ERRAND_NAME: push-apps
-      ENV_FILE: environments/((iaas))/((foundation))/config/secrets/env.yml
-      INSTANCE: healthwatch-forwarder/first
-  - task: smoke-tests_tests
-    attempts: 5
-    image: platform-automation-image
-    file: configuration/proposed-tasks/run-errand.yml
-    input_mapping:
-      config: configuration
-      env: interpolated-files
-    params:
-      CONFIG_FILE: environments/((iaas))/((foundation))/config/templates/p-healthwatch.yml
-      ERRAND_NAME: smoke-tests
-      ENV_FILE: environments/((iaas))/((foundation))/config/secrets/env.yml
-      INSTANCE: healthwatch-forwarder/first
-
-
-
 
 - name: unlock-tile
   serial: true
