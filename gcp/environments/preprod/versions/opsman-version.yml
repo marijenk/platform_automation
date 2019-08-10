@@ -1,0 +1,7 @@
+---
+pivnet-api-token: ((pivnet_token))
+pivnet-file-glob: "*GCP.yml"
+pivnet-product-slug: "ops-manager"
+product-version: "2.3.4"
+download-stemcell: false
+stemcell-iaas: "google"

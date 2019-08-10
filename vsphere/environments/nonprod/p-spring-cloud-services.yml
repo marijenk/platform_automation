@@ -1,0 +1,4 @@
+singleton_availability_zone: az2
+az2_name: az1
+az3_name: az3
+network_name: services

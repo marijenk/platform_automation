@@ -1,0 +1,120 @@
+platform-automation-version: 0.0.1-rc.229
+environment: nonprod
+environment_root: environments/nonprod
+version_root: environments/nonprod/versions
+
+# Opsman
+opsman_target: opsman.nprod.pcf.com
+opsman_skip_ssl_validation: true
+opsman_user: admin
+opsman_config_file: environments/nonprod/config/opsman.yml
+opsman_vars_files: |
+  vars/environments/nonprod/opsman.yml
+  secrets/product.yml
+
+# BOSH Director
+director_config_file: environments/nonprod/config/director.yml
+director_vars_files: |
+  vars/environments/nonprod/director.yml
+  secrets/product.yml
+
+# PAS
+pas_config_opsfile: |
+  config/features/nfs_volume_driver-disable.yml
+  config/features/haproxy_forward_tls-disable.yml
+  config/optional/add-router-static_ips.yml
+  config/network/3-az-configuration.yml
+  config/optional/add-routing_custom_ca_certificates.yml
+  config/optional/add-diego_brain-static_ips.yml
+  config/optional/add-4-networking_poe_ssl_certs.yml
+  config/optional/add-syslog_host.yml
+  config/optional/add-syslog_port.yml
+  config/optional/add-syslog_protocol.yml
+pas_vars_files: |
+  config/product-default-vars.yml
+  config/resource-vars.yml
+  config/errand-vars.yml
+  vars/environments/nonprod/cf.yml
+  secrets/product.yml
+
+# Healthwatch
+healthwatch_config_opsfile: |
+  config/features/boshtasks-disable.yml
+  config/network/3-az-configuration.yml
+  config/features/syslog_selector-active.yml
+healthwatch_vars_files: |
+  config/product-default-vars.yml
+  config/resource-vars.yml
+  config/errand-vars.yml
+  vars/environments/nonprod/p-healthwatch.yml
+
+# Metrics
+apm_config_opsfile:
+  config/network/3-az-configuration.yml
+apm_vars_files:
+  config/product-default-vars.yml
+  config/resource-vars.yml
+  config/errand-vars.yml
+  vars/environments/nonprod/apm.yml
+
+# RabbitMQ
+rabbitmq_config_opsfile:
+  config/network/3-az-configuration.yml
+  config/features/multitenant_support-enabled.yml
+rabbitmq_vars_files:
+  config/product-default-vars.yml
+  config/resource-vars.yml
+  config/errand-vars.yml
+  vars/environments/nonprod/p-rabbitmq.yml
+  secrets/product.yml
+
+# MySQL
+mysql_config_opsfile:
+  config/network/3-az-configuration.yml
+  config/features/plan2_selector-inactive.yml
+  config/features/plan3_selector-inactive.yml
+  config/features/backups_selector-scp.yml
+  config/features/syslog_migration_selector-enabled.yml
+mysql_vars_files:
+  config/product-default-vars.yml
+  config/resource-vars.yml
+  config/errand-vars.yml
+  vars/environments/nonprod/pivotal-mysql.yml
+
+# Spring Cloud Services
+scs_config_opsfile:
+  config/network/3-az-configuration.yml
+scs_vars_files:
+  config/product-default-vars.yml
+  config/resource-vars.yml
+  config/errand-vars.yml
+  vars/environments/nonprod/p-spring-cloud-services.yml
+
+# Backup Destination
+hostname: backups.nprod.pcf.com
+nfs_path: /PCF_STG
+mount_point: /tmp/nfs
+
+
+# Isolation Segments
+iso1_config_opsfile:
+  config/optional/add-isolated_router_iso1-static_ips.yml
+  config/features/system_logging-enabled.yml
+  config/network/3-az-configuration.yml
+  config/features/haproxy_forward_tls-disable.yml
+  config/optional/add-routing_custom_ca_certificates.yml
+iso1_vars_files:
+  vars/environments/nonprod/iso1-isolation-segment.yml
+  config/product-default-vars.yml
+  secrets/product.yml
+
+iso2_config_opsfile:
+  config/optional/add-isolated_router_iso2-static_ips.yml
+  config/features/system_logging-enabled.yml
+  config/network/3-az-configuration.yml
+  config/features/haproxy_forward_tls-disable.yml
+  config/optional/add-routing_custom_ca_certificates.yml
+iso2_vars_files:
+  vars/environments/nonprod/iso2-isolation-segment.yml
+  config/product-default-vars.yml
+  secrets/product.yml

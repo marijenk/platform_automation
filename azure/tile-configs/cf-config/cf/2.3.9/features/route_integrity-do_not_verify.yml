@@ -1,0 +1,5 @@
+- type: replace
+  path: /product-properties/.properties.route_integrity?
+  value:
+    value: do_not_verify
+    selected_option: do_not_verify

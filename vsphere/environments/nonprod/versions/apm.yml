@@ -1,0 +1,5 @@
+version: 1.5.0
+product: apm
+file_pattern: "apm*.pivotal"
+stemcell_version: "3586.46"
+stemcell_file_pattern: "bosh-stemcell-*-vsphere-esxi-ubuntu-trusty-go_agent.tgz"

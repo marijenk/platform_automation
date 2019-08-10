@@ -1,0 +1,3 @@
+version: 2.3.4
+product: ops-manager
+file_pattern: pcf-vsphere-*.ova

@@ -1,0 +1,284 @@
+# pivnet image
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tag: latest-final
+
+resources:
+- name: platform-automation-tasks
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: platform-automation
+    product_version: ((pcf_automation_version))
+    sort_by: semver
+
+- name: platform-automation-image
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: platform-automation
+    product_version: ((pcf_automation_version))
+    sort_by: semver
+
+- name: configuration
+  type: git
+  source:
+    private_key: |
+      ((git_private_key.private_key))
+    uri: ((git_uri))
+    branch: master
+
+- name: tile-config-generator
+  type: git
+  source:
+    uri: https://github.com/pivotalservices/tile-config-generator.git
+
+jobs:
+- name: configure-opsman
+  serial: true
+  serial_groups: [ install ]
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      params:
+        globs: ["platform-automation-image-*.*"]
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        globs: ["platform-automation-tasks-*.*"]
+        unpack: true
+    - get: configuration
+
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    input_mapping:
+      files: configuration
+    params:
+      CREDHUB_CA_CERT: |
+          ((credhub_ca_cert.ca))
+      CREDHUB_CLIENT: ((credhub_client))
+      CREDHUB_SECRET: ((credhub_secret))
+      CREDHUB_SERVER: ((credhub_server))
+      PREFIX: /concourse/main
+      INTERPOLATION_PATH: ((foundation))/
+
+  - task: configure-authentication
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-authentication.yml
+    attempts: 10
+    input_mapping:
+      env: interpolated-files
+      config: interpolated-files
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+      AUTH_CONFIG_FILE: ((foundation))/auth/auth.yml
+
+  - task: configure-director
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-director.yml
+    input_mapping:
+      config: interpolated-files
+      env: interpolated-files
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+      DIRECTOR_CONFIG_FILE: ((foundation))/config/director.yml
+
+  - task: apply-director-changes
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/apply-director-changes.yml
+    input_mapping:
+      env: interpolated-files
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+
+- name: configure-pas
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      params:
+        globs: ["platform-automation-image-*.*"]
+        unpack: true
+    - get: platform-automation-tasks
+      trigger: true
+      params:
+        globs: ["platform-automation-tasks-*.*"]
+        unpack: true
+      passed:
+      - configure-opsman
+    - get: configuration
+    - get: tile-config-generator 
+
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    input_mapping:
+      files: configuration
+    params:
+      CREDHUB_CA_CERT: |
+        ((credhub_ca_cert.ca))
+      CREDHUB_CLIENT: ((credhub_client))
+      CREDHUB_SECRET: ((credhub_secret))
+      CREDHUB_SERVER: ((credhub_server))
+      PREFIX: /concourse/main
+      INTERPOLATION_PATH: ((foundation))/
+
+  - task: download-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    input_mapping:
+      config: interpolated-files
+    params:
+      CONFIG_FILE: ((foundation))/versions/cf-versions.yml
+
+  - task: generate-product-config
+    file: tile-config-generator/tasks/product-config-with-errands.yml
+    input_mapping:
+      product: downloaded-product
+
+  - task: upload-and-stage-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+    input_mapping:
+      product: downloaded-product
+      env: interpolated-files
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+
+  - task: upload-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-stemcell.yml
+    input_mapping:
+      env: interpolated-files
+      stemcell: downloaded-stemcell
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+
+  - task: configure-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-product.yml
+    input_mapping:
+      vars: interpolated-files
+      env: interpolated-files
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+      CONFIG_FILE: product.yml
+      VARS_FILES: {{pas_vars_files}}
+      OPS_FILES: {{pas_config_opsfile}}
+
+- name: configure-mysql
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      params:
+        globs: ["platform-automation-image-*.*"]
+        unpack: true
+    - get: platform-automation-tasks
+      trigger: true
+      params:
+        globs: ["platform-automation-tasks-*.*"]
+        unpack: true
+      passed:
+      - configure-opsman
+    - get: configuration
+    - get: tile-config-generator 
+
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    input_mapping:
+      files: configuration
+    params:
+      CREDHUB_CA_CERT: |
+        ((credhub_ca_cert.ca))
+      CREDHUB_CLIENT: ((credhub_client))
+      CREDHUB_SECRET: ((credhub_secret))
+      CREDHUB_SERVER: ((credhub_server))
+      PREFIX: /concourse/main
+      INTERPOLATION_PATH: ((foundation))/
+
+  - task: download-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    input_mapping:
+      config: interpolated-files
+    params:
+      CONFIG_FILE: ((foundation))/versions/pivotal-mysql-versions.yml
+
+  - task: generate-product-config
+    file: tile-config-generator/tasks/product-config-with-errands.yml
+    input_mapping:
+      product: downloaded-product
+
+  - task: upload-and-stage-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+    input_mapping:
+      product: downloaded-product
+      env: interpolated-files
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+
+  - task: upload-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-stemcell.yml
+    input_mapping:
+      env: interpolated-files
+      stemcell: downloaded-stemcell
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+
+  - task: configure-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-product.yml
+    input_mapping:
+      vars: interpolated-files
+      env: interpolated-files
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+      CONFIG_FILE: product.yml
+      VARS_FILES: {{mysql_vars_files}}
+      OPS_FILES: {{mysql_config_opsfile}}
+
+- name: apply-changes
+  serial: true
+  plan:
+  - aggregate:
+    - get: configuration
+    - get: platform-automation-image
+      params:
+        globs: ["platform-automation-image-*.*"]
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        globs: ["platform-automation-tasks-*.*"]
+        unpack: true
+      passed:
+        - configure-pas
+        - configure-mysql
+      trigger: true
+
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    input_mapping:
+      files: configuration
+    params:
+      CREDHUB_CA_CERT: |
+        ((credhub_ca_cert.ca))
+      CREDHUB_CLIENT: ((credhub_client))
+      CREDHUB_SECRET: ((credhub_secret))
+      CREDHUB_SERVER: ((credhub_server))
+      PREFIX: /concourse/main
+      INTERPOLATION_PATH: ((foundation))/
+
+  - task: apply-changes
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/apply-changes.yml
+    input_mapping:
+      env: interpolated-files
+    params:
+      ENV_FILE: ((foundation))/env/env.yml

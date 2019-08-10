@@ -1,0 +1,6 @@
+version: 2.3.2
+product: p-isolation-segment
+file_pattern: "*.pivotal"
+stemcell_product: stemcells-ubuntu-xenial
+stemcell_version: "97.28"
+stemcell_file_pattern: "bosh-stemcell-*-vsphere-esxi-ubuntu-xenial-go_agent.tgz"

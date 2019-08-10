@@ -1,0 +1,14 @@
+vcenter_host: vcenter_host_name
+vcenter_user: vcenter_service_account
+vsphere_datacenter: vsphere_datacenter
+vsphere_folder: /Datacenter/vm/pcf_nonprod_vms
+opsman_host: opsman.nprod.pcf.com
+opsman_private_ip: 111.222.333.444
+opsman_network: vsphere_opsman_network
+opsman_network_gateway: 111.222.333.1
+opsman_datastore: vsphere_datastore
+opsman_resource_pool: vsphere_az1_rp
+opsman_dns: 111.222.333.111
+opsman_ntp: 111.222.333.222
+opsman_netmask: 255.255.255.0
+vm_name: OpsManagerNonProd

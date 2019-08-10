@@ -1,0 +1,5 @@
+- type: replace
+  path: /product-properties/.properties.system_database?
+  value:
+    value: internal_mysql
+    selected_option: internal_mysql

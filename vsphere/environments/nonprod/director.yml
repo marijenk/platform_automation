@@ -1,0 +1,60 @@
+vcenter_host: vcenter_host_name
+vcenter_user: vcenter_service_account
+vsphere_datacenter: vsphere_datacenter
+vsphere_folder: /Datacenter/vm/pcf_nonprod_vms
+opsman_host: opsman.nprod.pcf.com
+ephemeral_datastores: vsphere_datastore
+persistent_datastores: vsphere_datastore
+bosh_vm_folder: pcf_nonprod_vms
+bosh_template_folder: pcf_templates
+bosh_disk_path: pcf_nonprod_disks
+ntp: xxx.xxx.xxx.xxx
+
+az1_cluster: vsphere_az1_cluster
+az1_resource_pool: vsphere_az1_rp
+az2_cluster: vsphere_az2_cluster
+az2_resource_pool: vsphere_az2_rp
+az3_cluster: vsphere_az3_cluster
+az3_resource_pool: vsphere_az3_rp
+
+infrastructure_network: vsphere_infra_network
+infrastructure_cidr: 111.222.333.0/24
+infrastructure_reserved_ip_ranges: 111.222.333.1-111.222.333.20
+infrastructure_dns: 111.222.333.444,111.222.333.444
+infrastructure_gateway: 111.222.333.1
+
+deployment_network: vsphere_deployment_network
+deployment_cidr: 111.222.333.0/24
+deployment_reserved_ip_ranges: 111.222.333.1-111.222.333.20
+deployment_dns: 111.222.333.444,111.222.333.444
+deployment_gateway: 111.222.333.1
+
+services_network: vsphere_services_network
+services_cidr: 111.222.333.0/24
+services_reserved_ip_ranges: 111.222.333.1-111.222.333.20
+services_dns: 111.222.333.444,111.222.333.444
+services_gateway: 111.222.333.1
+
+iso1_apps_network: vsphere_iso1_apps_network
+iso1_apps_cidr: 111.222.333.0/24
+iso1_apps_reserved_ip_ranges: 111.222.333.1-111.222.333.20
+iso1_apps_dns: 111.222.333.444,111.222.333.444
+iso1_apps_gateway: 111.222.333.1
+
+iso1_svcs_network: vsphere_iso1_services_network
+iso1_svcs_cidr: 111.222.333.0/24
+iso1_svcs_reserved_ip_ranges: 111.222.333.1-111.222.333.20
+iso1_svcs_dns: 111.222.333.444,111.222.333.444
+iso1_svcs_gateway: 111.222.333.1
+
+iso2_apps_network: vsphere_iso2_apps_network
+iso2_apps_cidr: 111.222.333.0/24
+iso2_apps_reserved_ip_ranges: 111.222.333.1-111.222.333.20
+iso2_apps_dns: 111.222.333.444,111.222.333.444
+iso2_apps_gateway: 111.222.333.1
+
+iso2_svcs_network: vsphere_iso2_services_network
+iso2_svcs_cidr: 111.222.333.0/24
+iso2_svcs_reserved_ip_ranges: 111.222.333.444,111.222.333.444
+iso2_svcs_dns: 111.222.333.444,111.222.333.444
+iso2_svcs_gateway: 111.222.333.1

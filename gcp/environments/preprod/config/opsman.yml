@@ -1,0 +1,17 @@
+---
+opsman-configuration:
+  gcp:
+    gcp_service_account: ((gcp_service_account))
+    project: ((gcp_project_id))
+    region: us-east1
+    zone: us-east1-b
+    vm_name: mariah-ops-manager               # default: OpsManager-vm
+    # For SharedVPC: projects/[HOST_PROJECT_ID]/regions/[REGION]/subnetworks/[SUBNET]
+    vpc_subnet: ((gcp_vpc_subnet))
+    tags: ops-manager
+    custom_cpu: 8                         # default:  8
+    custom_memory: 16                     # default: 16
+    boot_disk_size: 100                   # default: 400
+    # At least one IP address (public or private) needs to be assigned to the VM.
+    public_ip: ((opsman_public_ip))
+    private_ip: ((opsman_private_ip))

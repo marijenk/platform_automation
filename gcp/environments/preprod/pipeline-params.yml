@@ -1,0 +1,43 @@
+# Environment
+environment: preprod
+foundation: gcp/environments/preprod
+
+# Git
+git_uri: git@github.com:marijenk/platform_automation.git
+configuration_git_path: gcp/environments/preprod/config
+installation_git_path: gcp/environments/preprod/install
+
+# PCF Automation
+pcf_automation_version: 1.1.0-beta.1
+
+# PAS
+pas_config_opsfile: |
+  config/features/routing_tls_termination-ha_proxy.yml
+  config/optional/add-routing_custom_ca_certificates.yml
+  config/network/3-az-configuration.yml
+pas_vars_files: |
+  config/product-default-vars.yml
+  config/resource-vars.yml
+  config/errand-vars.yml
+  vars/gcp/environments/preprod/config/cf.yml
+
+# Healthwatch
+healthwatch_config_opsfile: |
+  config/network/3-az-configuration.yml
+healthwatch_vars_files: |
+  config/product-default-vars.yml
+  config/resource-vars.yml
+  config/errand-vars.yml
+  vars/gcp/environments/preprod/config/p-healthwatch.yml
+
+# MySQL
+mysql_config_opsfile:
+  config/network/3-az-configuration.yml
+  config/features/plan2_selector-inactive.yml
+  config/features/plan3_selector-inactive.yml
+  config/features/backups_selector-scp.yml
+mysql_vars_files:
+  config/product-default-vars.yml
+  config/resource-vars.yml
+  config/errand-vars.yml
+  vars/gcp/environments/preprod/config/pivotal-mysql.yml

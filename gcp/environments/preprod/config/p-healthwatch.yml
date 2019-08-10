@@ -1,0 +1,9 @@
+network_name: pas
+service_network_name: services
+singleton_availability_zone: us-east1-b
+az2_name: us-east1-c
+az3_name: us-east1-d
+opsman/enable/url: ((opsman_target))
+healthwatch-forwarder/health_check_az: az2
+boshtasks/enable/bosh_taskcheck_username: ((bosh_taskcheck.password))
+boshtasks/enable/bosh_taskcheck_password: ((bosh_taskcheck.username))

@@ -1,0 +1,12 @@
+network_name: deployment
+service_network_name: services
+singleton_availability_zone: az2
+az2_name: az1
+az3_name: az3
+opsman/enable/url: https://opsman.nprod.pcf.com
+healthwatch-forwarder/health_check_az: az2
+healthwatch-forwarder/health_check_vm_type: medium.disk
+#smoke-tests_post_deploy_state: off
+syslog_selector/active/syslog_address: syslog.nprod.pcf.com
+syslog_selector/active/syslog_port: 514
+syslog_selector/active/syslog_transport: tcp

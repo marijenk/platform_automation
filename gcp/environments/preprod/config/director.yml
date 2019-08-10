@@ -1,0 +1,102 @@
+iaas-configuration:
+  project: ((gcp_project_id))
+  associated_service_account: ((gcp_associated_service_account))
+  # auth_json: ((gcp_service_account))
+
+
+director-configuration:
+  ntp_servers_string: "us.pool.ntp.org, time.google.com"
+  metrics_ip:
+  resurrector_enabled: true
+  director_hostname:
+  max_threads:
+  custom_ssh_banner:
+  disable_dns_release: false
+  opentsdb_ip:
+  director_worker_count: 5
+  post_deploy_enabled: false
+  bosh_recreate_on_next_deploy: false
+  retry_bosh_deploys: false
+  keep_unreachable_vms: false
+  database_type: internal
+  blobstore_type: local
+  hm_pager_duty_options:
+    enabled: false
+  hm_emailer_options:
+    enabled: false
+
+security-configuration:
+  trusted_certificates: ((pas_routing_custom_ca_certificate.ca))
+  generate_vm_passwords: true
+  opsmanager_root_ca_trusted_certs: true
+
+
+syslog-configuration:
+  enabled: false
+
+
+az-configuration:
+- name: us-east1-b
+- name: us-east1-c
+- name: us-east1-d
+
+
+networks-configuration:
+  icmp_checks_enabled: false
+  networks:
+  - name: infrastructure
+    subnets:
+    - iaas_identifier: mariah-pcf-network/mariah-infrastructure-subnet/us-east1
+      cidr: 10.0.0.0/26
+      reserved_ip_ranges: 10.0.0.1-10.0.0.10
+      gateway: 10.0.0.1
+      dns: 8.8.8.8
+      availability_zone_names:
+      - us-east1-b
+      - us-east1-c
+      - us-east1-d
+  - name: pas
+    subnets:
+    - iaas_identifier: mariah-pcf-network/mariah-pas-subnet/us-east1
+      cidr: 10.0.4.0/24
+      reserved_ip_ranges: 10.0.4.1-10.0.4.10
+      gateway: 10.0.4.1
+      dns: 8.8.8.8
+      availability_zone_names:
+      - us-east1-b
+      - us-east1-c
+      - us-east1-d
+  - name: services
+    subnets:
+    - iaas_identifier: mariah-pcf-network/mariah-services-subnet/us-east1
+      cidr: 10.0.8.0/24
+      reserved_ip_ranges: 10.0.8.1-10.0.8.10
+      gateway: 10.0.8.1
+      dns: 8.8.8.8 
+      availability_zone_names:
+      - us-east1-b
+      - us-east1-c
+      - us-east1-d
+
+
+network-assignment:
+  singleton_availability_zone:
+    name: us-east1-b
+  network:
+    name: infrastructure
+
+
+resource-configuration:
+  compilation:
+    instances: automatic
+    instance_type:
+      id: automatic
+    internet_connected: true
+  director:
+    instances: automatic
+    persistent_disk:
+      size_mb: automatic
+    instance_type:
+      id: automatic
+    internet_connected: true
+

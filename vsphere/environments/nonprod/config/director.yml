@@ -1,0 +1,131 @@
+iaas-configuration:
+  vcenter_host: ((vcenter_host))
+  vcenter_username: ((vcenter_user))
+  vcenter_password: ((vcenter_password))
+  datacenter: ((vsphere_datacenter))
+  disk_type: thin
+  ephemeral_datastores_string: ((ephemeral_datastores))
+  persistent_datastores_string: ((persistent_datastores))
+  bosh_vm_folder: ((bosh_vm_folder))
+  bosh_template_folder: ((bosh_template_folder))
+  bosh_disk_path: ((bosh_disk_path))
+
+director-configuration:
+  ntp_servers_string: ((ntp))
+az-configuration:
+- name: az1
+  clusters:
+  - cluster: ((az1_cluster))
+    resource_pool: ((az1_resource_pool))
+- name: az2
+  clusters:
+  - cluster: ((az2_cluster))
+    resource_pool: ((az2_resource_pool))
+- name: az3
+  clusters:
+  - cluster: ((az3_cluster))
+    resource_pool: ((az3_resource_pool))
+network-assignment:
+  singleton_availability_zone:
+    name: az1
+  network:
+    name: infrastructure
+networks-configuration:
+  icmp_checks_enabled: false
+  networks:
+  - name: infrastructure
+    service_network: false
+    subnets:
+    - iaas_identifier: ((infrastructure_network))
+      cidr: ((infrastructure_cidr))
+      reserved_ip_ranges: ((infrastructure_reserved_ip_ranges))
+      dns: ((infrastructure_dns))
+      gateway: ((infrastructure_gateway))
+      availability_zone_names:
+      - az1
+      - az2
+      - az3
+  - name: deployment
+    service_network: false
+    subnets:
+    - iaas_identifier: ((deployment_network))
+      cidr: ((deployment_cidr))
+      reserved_ip_ranges: ((deployment_reserved_ip_ranges))
+      dns: ((deployment_dns))
+      gateway: ((deployment_gateway))
+      availability_zone_names:
+      - az1
+      - az2
+      - az3
+  - name: services
+    service_network: false
+    subnets:
+    - iaas_identifier: ((services_network))
+      cidr: ((services_cidr))
+      reserved_ip_ranges: ((services_reserved_ip_ranges))
+      dns: ((services_dns))
+      gateway: ((services_gateway))
+      availability_zone_names:
+      - az1
+      - az2
+      - az3
+  - name: iso1-apps
+    service_network: false
+    subnets:
+    - iaas_identifier: ((iso1_apps_network))
+      cidr: ((iso1_apps_cidr))
+      reserved_ip_ranges: ((iso1_apps_reserved_ip_ranges))
+      dns: ((iso1_apps_dns))
+      gateway: ((iso1_apps_gateway))
+      availability_zone_names:
+      - az1
+      - az2
+      - az3
+  - name: iso1-svcs
+    service_network: false
+    subnets:
+    - iaas_identifier: ((iso1_svcs_network))
+      cidr: ((iso1_svcs_cidr))
+      reserved_ip_ranges: ((iso1_svcs_reserved_ip_ranges))
+      dns: ((iso1_svcs_dns))
+      gateway: ((iso1_svcs_gateway))
+      availability_zone_names:
+      - az1
+      - az2
+      - az3
+  - name: iso2-apps
+    service_network: false
+    subnets:
+    - iaas_identifier: ((iso2_apps_network))
+      cidr: ((iso2_apps_cidr))
+      reserved_ip_ranges: ((iso2_apps_reserved_ip_ranges))
+      dns: ((iso2_apps_dns))
+      gateway: ((iso2_apps_gateway))
+      availability_zone_names:
+      - az1
+      - az2
+      - az3
+  - name: iso2-svcs
+    service_network: false
+    subnets:
+    - iaas_identifier: ((iso2_svcs_network))
+      cidr: ((iso2_svcs_cidr))
+      reserved_ip_ranges: ((iso2_svcs_reserved_ip_ranges))
+      dns: ((iso2_svcs_dns))
+      gateway: ((iso2_svcs_gateway))
+      availability_zone_names:
+      - az1
+      - az2
+      - az3
+
+syslog-configuration:
+  address: syslog.nprod.pcf.com
+  enabled: true
+  port: "514"
+  tls_enabled: false
+  transport_protocol: tcp
+
+security-configuration:
+  trusted_certificates: |
+    -----BEGIN CERTIFICATE-----
+    -----END CERTIFICATE-----

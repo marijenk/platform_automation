@@ -1,0 +1,19 @@
+# code_snippet 
+---
+platform: linux
+
+inputs:
+  - name: config
+  - name: installation
+
+outputs:
+  - name: backup_list 
+
+params:
+  HOSTNAME:
+  NFS_PATH:
+  MOUNT_POINT:
+  OPSMAN:
+
+run:
+  path: config/tasks/nfs-artifact.sh

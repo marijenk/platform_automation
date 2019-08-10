@@ -1,0 +1,26 @@
+singleton_availability_zone: az2
+network_name: deployment
+az2_name: az1
+az3_name: az3
+cloud_controller/system_domain: sys.nprod.pcf.com
+cloud_controller/apps_domain: apps.nprod.pcf.com
+mysql_monitor/recipient_email: concourse@pivotal.io
+credhub_key_encryption_passwords_0/primary: true
+credhub_key_encryption_passwords_0/name: primary credhub secret
+networking_poe_ssl_certs_0/name: apps
+networking_poe_ssl_certs_1/name: sys
+networking_poe_ssl_certs_2/name: uaa
+networking_poe_ssl_certs_3/name: login
+security_acknowledgement: X
+compute_instances: 3
+nfsbrokerpush_post_deploy_state: false
+router/static_ips: 111.222.333.1-111.222.333.20
+diego_brain/static_ips: 111.222.333.21-111.222.333.23
+mysql_monitor_instances: 0
+secure_service_instance_credentials: true
+credhub_instances: 1
+test-autoscaling_post_deploy_state: off
+#push-usage-service_post_deploy_state: off
+syslog_host: syslog.nprod.pcf.com
+syslog_port: 514
+syslog_protocol: tcp

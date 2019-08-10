@@ -1,0 +1,33 @@
+singleton_availability_zone: az2
+az2_name: az1
+az3_name: az3
+network_name: deployment
+service_network_name: services
+multitenant_support/enabled/disk_alarm_threshold: '{mem_relative,1.0}'
+multitenant_support/enabled/server_admin_credentials_identity: adminnp
+multitenant_support/enabled/broker_operator_set_policy_enabled: false
+multitenant_support/enabled/server_cluster_partition_handling: pause_minority
+multitenant_support/enabled/server_plugins:
+  - rabbitmq_management
+multitenant_support/enabled/server_ports: 15672, 5672, 5671, 1883, 8883, 61613, 61614, 15674
+multitenant_support/enabled/server_ssl_verification_depth: 5
+multitenant_support/enabled/server_ssl_versions:
+  - tlsv1.1
+  - tlsv1.2
+on_demand_broker_plan_1_cf_service_access: enable
+on_demand_broker_plan_1_description: |
+  This plan provides a single dedicated RabbitMQ 3.7 node
+  Users use at your own risk
+on_demand_broker_plan_1_disk_limit_acknowledgement:
+  - acknowledge
+on_demand_broker_plan_1_features: RabbitMQ 3.7
+on_demand_broker_plan_1_instance_quota: 10
+on_demand_broker_plan_1_name: standard
+on_demand_broker_plan_1_rabbitmq_az_placement:
+  - az1
+  - az2
+  - az3
+on_demand_broker_plan_1_rabbitmq_cluster_partition_handling_strategy: pause_minority
+on_demand_broker_plan_1_rabbitmq_number_of_nodes: 1
+syslog_selector/enabled/address: syslog.nprod.pcf.com
+syslog_selector/enabled/port: 514

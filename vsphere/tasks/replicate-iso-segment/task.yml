@@ -1,0 +1,14 @@
+platform: linux
+inputs:
+- name: platform-automation-config
+- name: isolation-segments-file
+
+params:
+  ISO_SEGNAME:
+  ISO_OUTPUT:
+
+outputs:
+- name: iso-segment-output
+
+run:
+  path: platform-automation-config/tasks/replicate-iso-segment/task.sh

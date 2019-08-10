@@ -1,0 +1,5 @@
+version: 1.3.2
+product: p-healthwatch
+file_pattern: "*.pivotal"
+stemcell_version: "3541.52"
+stemcell_file_pattern: "bosh-stemcell-*-vsphere-esxi-ubuntu-trusty-go_agent.tgz"

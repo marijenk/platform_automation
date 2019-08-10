@@ -1,0 +1,6 @@
+az2_name: az1
+az3_name: az3
+singleton_availability_zone: az2
+network_name: services
+#smoke-tests_post_deploy_state: off
+#smoke-tests_pre_delete_state: off

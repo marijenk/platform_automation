@@ -1,0 +1,19 @@
+singleton_availability_zone: us-east1-b
+az2_name: us-east1-c
+az3_name: us-east1-d
+network_name: pas
+service_network_name: services
+backups_selector: SCP Backups
+backups_selector/scp/user: ubuntu
+backups_selector/scp/server: sadf
+backups_selector/scp/destination: /
+backups_selector/scp/key: |
+  ssh-key testkey
+backups_selector/scp/port: 22
+backups_selector/scp/cron_schedule: 0 0 5 31 2 ?
+backups_selector/scp/enable_email_alerts: false
+plan1_selector/active/az_multi_select:
+  - us-east1-b
+  - us-east1-c
+  - us-east1-d
+plan1_selector/active/multi_node_deployment: true
