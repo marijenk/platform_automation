@@ -86,7 +86,7 @@ jobs:
       CREDHUB_CLIENT: concourse_to_credhub_client
       CREDHUB_SECRET: ((concourse_credhub_client_secret))
       PREFIX: '/concourse/((team))'
-      INTERPOLATION_PATHS: "environments/((iaas))/((foundation))/config-director/secrets"
+      INTERPOLATION_PATHS: "environments/((iaas))/((foundation))/config-director"
     input_mapping:
       files: director-configuration
 
@@ -139,11 +139,11 @@ jobs:
     input_mapping:
       image: downloaded-product
       state: state
-      config: director-configuration
-      vars: director-configuration
+      config: interpoladted-files
+      vars: interpolated-files
       secrets: interpolated-files
     params:
-      DOWNLOAD_CONFIG_FILE: environments/((iaas))/((foundation))/config-director/versions/opsman.yml
+      CONFIG_FILE: environments/((iaas))/((foundation))/config-director/versions/opsman.yml
       STATE_FILE: environments/((iaas))/((foundation))/state/state.yml
       OPSMAN_CONFIG_FILE: environments/((iaas))/((foundation))/config-director/templates/opsman.yml
       VARS_FILES: |
