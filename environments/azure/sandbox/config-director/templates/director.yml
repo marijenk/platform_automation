@@ -67,29 +67,29 @@ networks-configuration:
   networks:
   - name: infrastructure
     subnets:
-    - iaas_identifier: mjenkins-virtual-network/mjenkins-infrastructure-subnet
-      cidr: 10.0.8.0/26
-      dns: 168.63.129.16
-      gateway: 10.0.8.1
-      reserved_ip_ranges: 10.0.8.0-10.0.8.9
+    - iaas_identifier: ((infra_iaas_id))
+      cidr: ((infra_cidr))
+      dns: ((dns))
+      gateway: ((infra_gw))
+      reserved_ip_ranges: ((infra_reserved_ips))
       availability_zone_names:
       - Availability Sets
   - name: pas
     subnets:
-    - iaas_identifier: mjenkins-virtual-network/mjenkins-pas-subnet
-      cidr: 10.0.0.0/22
-      dns: 168.63.129.16
-      gateway: 10.0.0.1
-      reserved_ip_ranges: 10.0.0.0-10.0.0.9
+    - iaas_identifier: ((pas_iaas_id))
+      cidr: ((pas_cidr))
+      dns: ((dns))
+      gateway: ((pas_gw))
+      reserved_ip_ranges: ((pas_reserved_ips))
       availability_zone_names:
       - Availability Sets
   - name: services
     subnets:
-    - iaas_identifier: mjenkins-virtual-network/mjenkins-services-subnet
-      cidr: 10.0.4.0/22
-      dns: 168.63.129.16
-      gateway: 10.0.4.1
-      reserved_ip_ranges: 10.0.4.0-10.0.4.9
+    - iaas_identifier: ((services_iaas_id))
+      cidr: ((services_cidr))
+      dns: ((dns))
+      gateway: ((services_gw))
+      reserved_ip_ranges: ((services_reserved_ips))
       availability_zone_names:
       - Availability Sets
 

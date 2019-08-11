@@ -1,18 +1,16 @@
-az1: europe-west4-a
-az2: europe-west4-b
-az3: europe-west4-c
+dns: 168.63.129.16
 
-gcp_infra_network: network-sbx/vpc-sbx/infra-sbx-subnet/europe-west4
-gcp_infra_network_cidr: 10.108.16.0/25
-gcp_infra_network_gateway: 10.108.16.1
-gcp_infra_network_reserved_ip_ranges: 10.108.16.0-10.108.16.20
+infra_iaas_id: mjenkins-virtual-network/mjenkins-infrastructure-subnet
+infra_cidr: 10.0.8.0/26
+infra_gw: 10.0.8.1
+infra_reserved_ips: 10.0.8.0-10.0.8.9
 
-gcp_pas_network: network-sbx/vpc-sbx/pas-sbx-subnet/europe-west4
-gcp_pas_network_cidr: 10.108.0.0/22
-gcp_pas_network_gateway: 10.108.0.1
-gcp_pas_network_reserved_ip_ranges: 10.108.0.0-10.108.0.20
+pas_iaas_id: mjenkins-virtual-network/mjenkins-pas-subnet
+pas_cidr: 10.0.0.0/22
+pas_gw: 10.0.0.1
+pas_reserved_ips: 10.0.0.0-10.0.0.9
 
-gcp_services_network: network-sbx/vpc-sbx/services-sbx-subnet/europe-west4
-gcp_services_network_cidr: 10.108.4.0/22
-gcp_services_network_gateway: 10.108.4.1
-gcp_services_network_reserved_ip_ranges: 10.108.4.0-10.108.4.20
+services_iaas_id: mjenkins-virtual-network/mjenkins-services-subnet
+services_cidr: 10.0.4.0/22
+services_gw: 10.0.4.1
+services_reserved_ips: 10.0.4.0-10.0.4.9

@@ -115,9 +115,29 @@ jobs:
 
   - task: download-create-opsman
     image: platform-automation-image
-    file: platform-automation-tasks/tasks/create-vm.yml
+    file: platform-automation-tasks/tasks/download-product.yml
     input_mapping:
       download-config: director-configuration
+      state: state
+      config: director-configuration
+      vars: director-configuration
+      secrets: interpolated-files
+    params:
+      CONFIG_FILE: environments/((iaas))/((foundation))/config-director/versions/opsman.yml
+      STATE_FILE: environments/((iaas))/((foundation))/state/state.yml
+      OPSMAN_CONFIG_FILE: environments/((iaas))/((foundation))/config-director/templates/opsman.yml
+      VARS_FILES: |
+        vars/environments/azure/common-director/opsman.yml
+        vars/environments/azure/sandbox/config-director/vars/infra.yml
+        vars/environments/azure/sandbox/config-director/vars/opsman.yml
+        secrets/environments/azure/sandbox/config-director/secrets/opsman.yml
+        secrets/environments/azure/sandbox/config-director/secrets/pivnet.yml
+
+  - task: create-vm
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/create-vm.yml
+    input_mapping:
+      image: downloaded-product
       state: state
       config: director-configuration
       vars: director-configuration

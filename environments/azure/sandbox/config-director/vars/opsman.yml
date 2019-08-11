@@ -1,4 +1,5 @@
 ---
-gcp_zone: "europe-west4-b"
-opsman_subnet: projects/network-sbx/regions/europe-west4/subnetworks/infra-sbx-subnet
-opsman_private_ip: 10.108.16.5
+container: ((container))
+vpc_subnet_id: ((vpc_subnet_id))
+om_private_ip: ((om_private_ip))
+om_public_ip: ((om_public_ip))
