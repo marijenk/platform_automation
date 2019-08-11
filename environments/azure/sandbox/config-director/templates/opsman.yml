@@ -15,7 +15,7 @@ opsman-configuration:
     storage_account: ((storage_account_name))     # account name of container
     storage_key: ((storage_account_key))
 
-    ssh_public_key: ((om_ssh_key.public_key))     # ssh key to access VM
+    ssh_public_key: ((om_ssh_key))     # ssh key to access VM
     vm_name: ops-manager-vm                       # default: Ops Manager-vm
     boot_disk_size: 200                           # default: 200
     cloud_name: AzureCloud                        # default: AzureCloud
