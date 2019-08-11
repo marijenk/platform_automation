@@ -1,5 +1,5 @@
 ---
-pivnet-api-token: ((pivnet-api-token))
-pivnet-file-glob: "*-google-*"
+pivnet-api-token: ((pivnet_token))
+pivnet-file-glob: "*-azure-*"
 pivnet-product-slug: "stemcells-ubuntu-xenial"
-product-version: "97.74"
+product-version-regex: ^250\..*$
